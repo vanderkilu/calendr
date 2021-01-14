@@ -1,5 +1,5 @@
 import React from "react";
-import closeIcon from "../assets/close.svg";
+const closeIcon = require("../assets/close.svg");
 
 import {
   StyledContainer,
@@ -27,7 +27,12 @@ const TaskModal: React.FC<TaskModalProps> = ({
         <StyledContainer>
           <StyledModal width={width}>
             <StyledHeader>
-              <StyledIcon alt="close icon" src={closeIcon} onClick={onClose} />
+              <StyledIcon
+                alt="close icon"
+                src={closeIcon}
+                onClick={onClose}
+                color="#fccdec"
+              />
             </StyledHeader>
             <StyledContent>{children}</StyledContent>
           </StyledModal>

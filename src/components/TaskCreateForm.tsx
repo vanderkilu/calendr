@@ -2,8 +2,9 @@ import React, { useState } from "react";
 
 import styled, { css } from "styled-components";
 import { ITask } from "../types";
-import closeIcon from "../assets/close.svg";
 import Button from "./Button";
+
+const closeIcon = require("../assets/close.svg");
 
 const StyledContainer = styled.div`
   position: fixed;

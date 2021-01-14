@@ -1,10 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import closeIcon from "../assets/close.svg";
-import deleteIcon from "../assets/trash.svg";
-import editIcon from "../assets/edit.svg";
-import calendarIcon from "../assets/calendar.svg";
-import priorityIcon from "../assets/priority.svg";
+
+const closeIcon = require("../assets/close.svg");
+const deleteIcon = require("../assets/trash.svg");
+const editIcon = require("../assets/edit.svg");
+const calendarIcon = require("../assets/calendar.svg");
+const priorityIcon = require("../assets/priority.svg");
 
 import {
   StyledContainer,

@@ -1,14 +1,14 @@
 import React from "react";
 import Home from "./views/Home";
 import "./index.css";
-import { EventProvider } from "./contexts/event";
+import { TaskProvider } from "./contexts/task.context";
 
 function App() {
   return (
     <>
-      <EventProvider>
+      <TaskProvider>
         <Home />
-      </EventProvider>
+      </TaskProvider>
     </>
   );
 }

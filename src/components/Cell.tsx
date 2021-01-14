@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import styled from "styled-components";
-import { IPosition, ICell } from "../types";
+import { ICell } from "../types";
 import { ID } from "../utils";
 
 export const StyledCell = styled.div<{ isToday: boolean }>`
@@ -14,14 +14,14 @@ export const StyledCell = styled.div<{ isToday: boolean }>`
   flex-direction: column;
   padding-top: 1.2rem;
 `;
-const CellText = styled.p`
+const StyledCellText = styled.p`
   position: absolute;
   right: 0.5rem;
   top: -1rem;
   font-size: 1.5rem;
   color: "#b8bac3";
 `;
-export const CellEvent = styled.div`
+export const StyledCellTask = styled.div`
   padding: 0.4rem;
   border-radius: 2px;
   background-color: #e8f5e9;
@@ -32,13 +32,13 @@ export const CellEvent = styled.div`
   cursor: pointer;
   overflow: hidden;
 `;
-const CellEventText = styled.p`
+const StyledCellTaskText = styled.p`
   font-size: 1rem;
   color: #81c784;
   padding: 0;
   margin: 0;
 `;
-const CellManyEvent = styled.div`
+const StyledManyTask = styled.div`
   color: "#b8bac3";
   font-size: 1.1rem;
   width: 100%;
@@ -47,10 +47,10 @@ const CellManyEvent = styled.div`
 `;
 
 interface CellProps {
-  eventItem: ICell;
-  onClick: (passed: boolean, dateStr: string, position?: IPosition) => void;
+  task: ICell;
+  onClick: (passed: boolean, dateStr: string) => void;
   today: number;
-  onCellEventClick: (id: string) => void;
+  onCellTaskClick: (id: string) => void;
   onOverflowClick: (e: ChangeEventType, dateStr: string) => void;
   onDragStart: (e: DragEventType, id: string) => void;
   onDrop: (e: DragEventType, dateStr: string) => void;
@@ -59,34 +59,29 @@ interface CellProps {
 type ChangeEventType = React.MouseEvent<HTMLDivElement, MouseEvent>;
 type DragEventType = React.DragEvent<HTMLDivElement>;
 
-export const Cell: React.FC<CellProps> = ({
-  eventItem,
+const Cell: React.FC<CellProps> = ({
+  task,
   today,
   onClick,
-  onCellEventClick,
+  onCellTaskClick,
   onOverflowClick,
   onDragStart,
   onDragOver,
   onDrop,
 }) => {
-  const { day, passed, dateStr, events } = eventItem;
+  const { day, passed, dateStr, tasks } = task;
   const cellRef = useRef<HTMLDivElement>(null);
 
   const handleClick = (passed: boolean, dateStr: string) => {
-    const position = cellRef.current && cellRef.current.getBoundingClientRect();
-    if (position) {
-      onClick(passed, dateStr, position);
-    } else {
-      onClick(passed, dateStr);
-    }
+    onClick(passed, dateStr);
   };
-  const hasEvent = events && events.length > 0;
-  const isManyEvents = events && events.length > 3;
-  const newEvents = isManyEvents ? events.slice(0, 3) : events;
-  const overDue = events.length - 3;
+  const hasTasks = tasks && tasks.length > 0;
+  const isManyTasks = tasks && tasks.length > 3;
+  const tasksToShow = isManyTasks ? tasks.slice(0, 3) : tasks;
+  const overDue = tasks.length - 3;
 
   const handleOnEventCellClick = (e: ChangeEventType, id: string) => {
-    onCellEventClick(id);
+    onCellTaskClick(id);
     e.stopPropagation();
   };
   const handleOnDrop = (e: DragEventType, dateStr: string, passed: boolean) => {
@@ -100,32 +95,30 @@ export const Cell: React.FC<CellProps> = ({
       key={ID()}
       isToday={day === today}
       onClick={() => handleClick(passed, dateStr)}
-      onDrop={(e: DragEventType) => handleOnDrop(e, eventItem.dateStr, passed)}
+      onDrop={(e: DragEventType) => handleOnDrop(e, task.dateStr, passed)}
       onDragOver={(e: DragEventType) => onDragOver(e)}
     >
-      {!passed && <CellText>{day}</CellText>}
-      {hasEvent &&
-        newEvents.map((event) => (
-          <CellEvent
-            onClick={(e: ChangeEventType) =>
-              handleOnEventCellClick(e, event.id)
-            }
+      {!passed && <StyledCellText>{day}</StyledCellText>}
+      {hasTasks &&
+        tasksToShow.map((task) => (
+          <StyledCellTask
+            onClick={(e: ChangeEventType) => handleOnEventCellClick(e, task.id)}
             draggable="true"
-            onDragStart={(e: DragEventType) => onDragStart(e, event.id)}
+            onDragStart={(e: DragEventType) => onDragStart(e, task.id)}
             key={ID()}
           >
-            {event && event.task && (
-              <CellEventText>{event.task.name}</CellEventText>
-            )}
-          </CellEvent>
+            {task && <StyledCellTaskText>{task.name}</StyledCellTaskText>}
+          </StyledCellTask>
         ))}
-      {isManyEvents && (
-        <CellManyEvent
+      {isManyTasks && (
+        <StyledManyTask
           onClick={(e: ChangeEventType) => onOverflowClick(e, dateStr)}
         >
           +{overDue}
-        </CellManyEvent>
+        </StyledManyTask>
       )}
     </StyledCell>
   );
 };
+
+export default Cell;

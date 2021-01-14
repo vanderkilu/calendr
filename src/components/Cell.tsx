@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import styled from "styled-components";
 import { ICell } from "../types";
 import { ID } from "../utils";
@@ -70,7 +70,6 @@ const Cell: React.FC<CellProps> = ({
   onDrop,
 }) => {
   const { day, passed, dateStr, tasks } = task;
-  const cellRef = useRef<HTMLDivElement>(null);
 
   const handleClick = (passed: boolean, dateStr: string) => {
     onClick(passed, dateStr);
@@ -91,7 +90,6 @@ const Cell: React.FC<CellProps> = ({
 
   return (
     <StyledCell
-      ref={cellRef}
       key={ID()}
       isToday={day === today}
       onClick={() => handleClick(passed, dateStr)}

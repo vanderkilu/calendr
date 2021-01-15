@@ -1,5 +1,4 @@
 import React from "react";
-const closeIcon = require("../assets/close.svg");
 
 import {
   StyledContainer,
@@ -8,6 +7,8 @@ import {
   StyledIcon,
   StyledHeader,
 } from "./SharedStyles";
+
+import closeIcon from "../assets/close.svg";
 
 interface TaskModalProps {
   isOpen: boolean;

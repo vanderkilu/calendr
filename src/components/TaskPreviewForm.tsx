@@ -1,12 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 
-const closeIcon = require("../assets/close.svg");
-const deleteIcon = require("../assets/trash.svg");
-const editIcon = require("../assets/edit.svg");
-const calendarIcon = require("../assets/calendar.svg");
-const priorityIcon = require("../assets/priority.svg");
-
 import {
   StyledContainer,
   StyledContent,
@@ -16,6 +10,12 @@ import {
   StyledFooter,
 } from "./SharedStyles";
 import Button from "./Button";
+
+import closeIcon from "../assets/close.svg";
+import deleteIcon from "../assets/trash.svg";
+import editIcon from "../assets/edit.svg";
+import calendarIcon from "../assets/calendar.svg";
+import priorityIcon from "../assets/priority.svg";
 
 const H3 = styled.h3`
   font-size: 1.8rem;
@@ -41,64 +41,70 @@ interface TaskPreviewProps {
   width?: number;
 }
 
-const TaskPreview: React.FC<TaskPreviewProps> = ({ width, onClose }) => {
+const TaskPreview: React.FC<TaskPreviewProps> = ({
+  width,
+  onClose,
+  isOpen,
+}) => {
   return (
     <>
-      <StyledContainer>
-        <StyledModal width={width}>
-          <StyledHeader>
-            <StyledIcon
-              isAction
-              alt="close icon"
-              src={deleteIcon}
-              onClick={onClose}
-              color="#fafafa"
-            />
-            <StyledIcon
-              isAction
-              alt="edit icon"
-              src={editIcon}
-              onClick={onClose}
-              color="#fafafa"
-            />
-            <StyledIcon
-              isAction
-              alt="close icon"
-              src={closeIcon}
-              onClick={onClose}
-              color="#fccdec"
-            />
-          </StyledHeader>
-          <StyledContent>
-            <H3>read more today</H3>
-            <StyledDetail>
+      {isOpen && (
+        <StyledContainer>
+          <StyledModal width={width}>
+            <StyledHeader>
               <StyledIcon
+                isAction
+                alt="close icon"
+                src={deleteIcon}
+                onClick={onClose}
                 color="#fafafa"
-                alt="calendar icon"
-                src={calendarIcon}
               />
-              <P>Due on Monday, january, 11</P>
-            </StyledDetail>
-            <StyledDetail>
               <StyledIcon
+                isAction
+                alt="edit icon"
+                src={editIcon}
+                onClick={onClose}
                 color="#fafafa"
-                alt="calendar icon"
-                src={priorityIcon}
               />
-              <P>This task has a high priority</P>
-            </StyledDetail>
-          </StyledContent>
-          <StyledFooter>
-            <Button
-              text="Mark as completed"
-              onClick={() => null}
-              btnType="normal"
-              size={100}
-              color="#212121"
-            />
-          </StyledFooter>
-        </StyledModal>
-      </StyledContainer>
+              <StyledIcon
+                isAction
+                alt="close icon"
+                src={closeIcon}
+                onClick={onClose}
+                color="#fccdec"
+              />
+            </StyledHeader>
+            <StyledContent>
+              <H3>read more today</H3>
+              <StyledDetail>
+                <StyledIcon
+                  color="#fafafa"
+                  alt="calendar icon"
+                  src={calendarIcon}
+                />
+                <P>Due on Monday, january, 11</P>
+              </StyledDetail>
+              <StyledDetail>
+                <StyledIcon
+                  color="#fafafa"
+                  alt="calendar icon"
+                  src={priorityIcon}
+                />
+                <P>This task has a high priority</P>
+              </StyledDetail>
+            </StyledContent>
+            <StyledFooter>
+              <Button
+                text="Mark as completed"
+                onClick={() => null}
+                btnType="normal"
+                size={100}
+                color="#212121"
+              />
+            </StyledFooter>
+          </StyledModal>
+        </StyledContainer>
+      )}
     </>
   );
 };

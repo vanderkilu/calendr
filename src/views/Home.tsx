@@ -9,6 +9,7 @@ import { CalendarHeaderMonth } from "../components/CalendarHeader";
 import TaskModal from "../components/TaskModal";
 import TaskForm from "../components/TaskCreateForm";
 import TaskPreview from "../components/TaskPreviewForm";
+import { ITask, TaskCreate } from "../types";
 
 const CellContainer = styled.div`
   display: grid;
@@ -31,12 +32,25 @@ const Home = () => {
   const [date, setDate] = useState(moment());
   const { state, dispatch } = useTasks();
   const { daysWithTasks, todayDate } = useCalendar(date, state.taskList);
-  const handleClick = () => {};
+  const [selectedDate, setSelectedDate] = useState("");
+
+  const [isTaskCreateVisible, setIsTaskCreateVisible] = useState(false);
+  const [isTaskPreviewVisible, setIsTaskPreviewVisible] = useState(false);
+  const [isOverflowVisible, setIsOverflowVisible] = useState(false);
+
+  const handleOnCellClick = (passed: boolean, dateStr: string) => {
+    if (passed) return;
+    setSelectedDate(dateStr);
+    setIsTaskCreateVisible(true);
+  };
   const handleOnCellTaskClick = () => {};
   const handleOnOverFlowClick = () => {};
-  const handleOnDragStart = () => {};
-  const handleOnDrop = () => {};
-  const handleOnDragOver = () => {};
+
+  const handleOnTaskSave = (payload: TaskCreate) => {
+    const task: ITask = { ...payload, id: ID() };
+    dispatch({ type: "ADD_TASK", payload: { task } });
+    setIsTaskCreateVisible(false);
+  };
   return (
     <>
       <CalendarHeaderMonth />
@@ -45,30 +59,34 @@ const Home = () => {
           <Cell
             task={task}
             today={todayDate}
-            onClick={handleClick}
+            onClick={handleOnCellClick}
             key={ID()}
             onCellTaskClick={handleOnCellTaskClick}
             onOverflowClick={handleOnOverFlowClick}
-            onDragStart={handleOnDragStart}
-            onDrop={handleOnDrop}
-            onDragOver={handleOnDragOver}
           />
         ))}
       </CellContainer>
-      <TaskModal isOpen={false} onClose={() => null} width={25}>
+      <TaskModal
+        isOpen={isOverflowVisible}
+        onClose={() => setIsOverflowVisible(false)}
+        width={25}
+      >
         {[1, 2, 3, 4, 5].map((i) => (
           <CellTask>{i}</CellTask>
         ))}
       </TaskModal>
-      {/* <TaskForm
-        isOpen={false}
-        onClose={() => null}
+      <TaskForm
+        defaultDate={selectedDate}
+        isOpen={isTaskCreateVisible}
+        onClose={() => setIsTaskCreateVisible(false)}
         width={50}
-        onDelete={() => null}
-        onSave={() => null}
-        onEdit={() => null}
-      ></TaskForm> */}
-      <TaskPreview isOpen={true} onClose={() => null} width={30}></TaskPreview>
+        onSave={handleOnTaskSave}
+      />
+      <TaskPreview
+        isOpen={isTaskPreviewVisible}
+        onClose={() => setIsTaskPreviewVisible(false)}
+        width={30}
+      />
     </>
   );
 };

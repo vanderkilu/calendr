@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 
 import styled, { css } from "styled-components";
-import { ITask } from "../types";
+import { ITask, TaskCreate } from "../types";
 import Button from "./Button";
+import moment from "moment";
 
-const closeIcon = require("../assets/close.svg");
+import closeIcon from "../assets/close.svg";
 
 const StyledContainer = styled.div`
   position: fixed;
@@ -126,11 +127,10 @@ type ChangeEventType =
   | React.ChangeEvent<HTMLTextAreaElement>;
 
 interface FormProps {
-  onSave: () => void;
+  onSave: (task: TaskCreate) => void;
+  defaultDate: string;
   isOpen: boolean;
   onClose: () => void;
-  onDelete: () => void;
-  onEdit: () => void;
   width: number;
 }
 
@@ -139,12 +139,13 @@ export const TaskForm: React.FC<FormProps> = ({
   width,
   onClose,
   isOpen,
-  onEdit,
+  defaultDate,
 }) => {
-  const [input, setInput] = useState<Partial<ITask>>({
-    name: "",
+  const dateStr = moment(defaultDate).format("YYYY-MM-DD");
+  const [input, setInput] = useState<TaskCreate>({
+    name: "unnamed task",
     description: "",
-    dueDate: "",
+    dueDate: dateStr,
     status: "inprogress",
     priority: 1,
   });
@@ -154,77 +155,77 @@ export const TaskForm: React.FC<FormProps> = ({
       ...inputs,
       [event.target.name]: event.target.value,
     }));
-  };
-  const handleOnSave = () => {
-    console.log("data", input);
+    console.log("input", input);
   };
   return (
     <>
-      <StyledContainer>
-        <StyledModal width={width}>
-          <StyledHeader>
-            <StyledIcon alt="close icon" src={closeIcon} onClick={onClose} />
-          </StyledHeader>
-          <StyledContent>
-            <StyledForm>
-              <StyledInputGroup>
-                <StyledLabel>Name</StyledLabel>
-                <StyledInput
-                  autoFocus
-                  placeholder="enter task name"
-                  name="name"
-                  value={input.name}
-                  onChange={handleInputChange}
-                />
-              </StyledInputGroup>
-              <StyledInputGroup>
-                <StyledLabel>Description</StyledLabel>
-                <StyledTextArea
-                  placeholder="enter description"
-                  name="description"
-                  value={input.description}
-                  onChange={handleInputChange}
-                />
-              </StyledInputGroup>
-              <StyledInputGroup>
-                <StyledLabel>Status</StyledLabel>
-                <StyledSelect
-                  name="status"
-                  value={input.status}
-                  onChange={handleInputChange}
-                >
-                  <StyledOption value="in-progress">In Progress</StyledOption>
-                  <StyledOption value="completed">Completed</StyledOption>
-                </StyledSelect>
-              </StyledInputGroup>
-              <StyledInputGroup>
-                <StyledLabel>Priority</StyledLabel>
-                <StyledSelect
-                  name="priority"
-                  value={input.priority}
-                  onChange={handleInputChange}
-                >
-                  <StyledOption value="1">High</StyledOption>
-                  <StyledOption value="2">Medium</StyledOption>
-                  <StyledOption value="3">Low</StyledOption>
-                </StyledSelect>
-              </StyledInputGroup>
-              <StyledInputGroup>
-                <StyledLabel>Due date </StyledLabel>
-                <StyledInput
-                  name="dueDate"
-                  type="date"
-                  value={input.dueDate}
-                  onChange={handleInputChange}
-                />
-              </StyledInputGroup>
-            </StyledForm>
-          </StyledContent>
-          <StyledFooter>
-            <Button text="Save" onClick={handleOnSave} />
-          </StyledFooter>
-        </StyledModal>
-      </StyledContainer>
+      {isOpen && (
+        <StyledContainer>
+          <StyledModal width={width}>
+            <StyledHeader>
+              <StyledIcon alt="close icon" src={closeIcon} onClick={onClose} />
+            </StyledHeader>
+            <StyledContent>
+              <StyledForm>
+                <StyledInputGroup>
+                  <StyledLabel>Name</StyledLabel>
+                  <StyledInput
+                    autoFocus
+                    placeholder="enter task name"
+                    name="name"
+                    value={input.name}
+                    onChange={handleInputChange}
+                  />
+                </StyledInputGroup>
+                <StyledInputGroup>
+                  <StyledLabel>Description</StyledLabel>
+                  <StyledTextArea
+                    placeholder="enter description"
+                    name="description"
+                    value={input.description}
+                    onChange={handleInputChange}
+                  />
+                </StyledInputGroup>
+                <StyledInputGroup>
+                  <StyledLabel>Status</StyledLabel>
+                  <StyledSelect
+                    name="status"
+                    value={input.status}
+                    onChange={handleInputChange}
+                  >
+                    <StyledOption value="in-progress">In Progress</StyledOption>
+                    <StyledOption value="completed">Completed</StyledOption>
+                  </StyledSelect>
+                </StyledInputGroup>
+                <StyledInputGroup>
+                  <StyledLabel>Priority</StyledLabel>
+                  <StyledSelect
+                    name="priority"
+                    value={input.priority}
+                    onChange={handleInputChange}
+                  >
+                    <StyledOption value="1">High</StyledOption>
+                    <StyledOption value="2">Medium</StyledOption>
+                    <StyledOption value="3">Low</StyledOption>
+                  </StyledSelect>
+                </StyledInputGroup>
+                <StyledInputGroup>
+                  <StyledLabel>Due date </StyledLabel>
+                  <StyledInput
+                    name="dueDate"
+                    type="date"
+                    value={input.dueDate}
+                    onChange={handleInputChange}
+                  />
+                </StyledInputGroup>
+              </StyledForm>
+            </StyledContent>
+            <StyledFooter>
+              <Button text="Save" onClick={() => onSave(input)} />
+            </StyledFooter>
+          </StyledModal>
+        </StyledContainer>
+      )}
     </>
   );
 };

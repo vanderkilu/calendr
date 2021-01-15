@@ -52,12 +52,8 @@ interface CellProps {
   today: number;
   onCellTaskClick: (id: string) => void;
   onOverflowClick: (e: ChangeEventType, dateStr: string) => void;
-  onDragStart: (e: DragEventType, id: string) => void;
-  onDrop: (e: DragEventType, dateStr: string) => void;
-  onDragOver: (e: DragEventType) => void;
 }
 type ChangeEventType = React.MouseEvent<HTMLDivElement, MouseEvent>;
-type DragEventType = React.DragEvent<HTMLDivElement>;
 
 const Cell: React.FC<CellProps> = ({
   task,
@@ -65,9 +61,6 @@ const Cell: React.FC<CellProps> = ({
   onClick,
   onCellTaskClick,
   onOverflowClick,
-  onDragStart,
-  onDragOver,
-  onDrop,
 }) => {
   const { day, passed, dateStr, tasks } = task;
 
@@ -83,26 +76,17 @@ const Cell: React.FC<CellProps> = ({
     onCellTaskClick(id);
     e.stopPropagation();
   };
-  const handleOnDrop = (e: DragEventType, dateStr: string, passed: boolean) => {
-    if (passed) return;
-    onDrop(e, dateStr);
-  };
-
   return (
     <StyledCell
       key={ID()}
       isToday={day === today}
       onClick={() => handleClick(passed, dateStr)}
-      onDrop={(e: DragEventType) => handleOnDrop(e, task.dateStr, passed)}
-      onDragOver={(e: DragEventType) => onDragOver(e)}
     >
       {!passed && <StyledCellText>{day}</StyledCellText>}
       {hasTasks &&
         tasksToShow.map((task) => (
           <StyledCellTask
             onClick={(e: ChangeEventType) => handleOnEventCellClick(e, task.id)}
-            draggable="true"
-            onDragStart={(e: DragEventType) => onDragStart(e, task.id)}
             key={ID()}
           >
             {task && <StyledCellTaskText>{task.name}</StyledCellTaskText>}

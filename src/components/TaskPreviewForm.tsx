@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import moment from "moment";
 
 import {
   StyledContainer,
@@ -16,6 +17,8 @@ import deleteIcon from "../assets/trash.svg";
 import editIcon from "../assets/edit.svg";
 import calendarIcon from "../assets/calendar.svg";
 import priorityIcon from "../assets/priority.svg";
+import listIcon from "../assets/list.svg";
+import { ITask } from "../types";
 
 const H3 = styled.h3`
   font-size: 1.8rem;
@@ -36,75 +39,97 @@ const StyledDetail = styled.div`
 `;
 
 interface TaskPreviewProps {
-  isOpen: boolean;
   onClose: () => void;
   width?: number;
+  task: ITask;
+  onDelete: () => void;
+  onEdit: () => void;
+  onUpdateStatus: () => void;
 }
 
 const TaskPreview: React.FC<TaskPreviewProps> = ({
   width,
   onClose,
-  isOpen,
+  task,
+  onDelete,
+  onEdit,
+  onUpdateStatus,
 }) => {
+  const humanDate = moment(task.dueDate).format("DDDD MMMM, YYYY");
+  const hasDescription = task.description !== "";
+  const statusText =
+    task.status === "completed" ? "Mark as in progress" : "Mark as completed";
+  const toPriority = (priority: 1 | 2 | 3) => {
+    const map = {
+      1: "high",
+      2: "medium",
+      3: "low",
+    };
+    return map[priority];
+  };
   return (
     <>
-      {isOpen && (
-        <StyledContainer>
-          <StyledModal width={width}>
-            <StyledHeader>
+      <StyledContainer>
+        <StyledModal width={width}>
+          <StyledHeader>
+            <StyledIcon
+              isAction
+              alt="delete icon"
+              src={deleteIcon}
+              onClick={onDelete}
+              color="#fafafa"
+            />
+            <StyledIcon
+              isAction
+              alt="edit icon"
+              src={editIcon}
+              onClick={onEdit}
+              color="#fafafa"
+            />
+            <StyledIcon
+              isAction
+              alt="close icon"
+              src={closeIcon}
+              onClick={onClose}
+              color="#fccdec"
+            />
+          </StyledHeader>
+          <StyledContent>
+            <H3>{task.name}</H3>
+            <StyledDetail>
               <StyledIcon
-                isAction
-                alt="close icon"
-                src={deleteIcon}
-                onClick={onClose}
                 color="#fafafa"
+                alt="calendar icon"
+                src={calendarIcon}
               />
+              <P>Due on {humanDate} </P>
+            </StyledDetail>
+            {hasDescription && (
+              <StyledDetail>
+                <StyledIcon color="#fafafa" alt="list icon" src={listIcon} />
+                <P> {task.description} </P>
+              </StyledDetail>
+            )}
+            <StyledDetail>
               <StyledIcon
-                isAction
-                alt="edit icon"
-                src={editIcon}
-                onClick={onClose}
                 color="#fafafa"
+                alt="priority icon"
+                src={priorityIcon}
               />
-              <StyledIcon
-                isAction
-                alt="close icon"
-                src={closeIcon}
-                onClick={onClose}
-                color="#fccdec"
-              />
-            </StyledHeader>
-            <StyledContent>
-              <H3>read more today</H3>
-              <StyledDetail>
-                <StyledIcon
-                  color="#fafafa"
-                  alt="calendar icon"
-                  src={calendarIcon}
-                />
-                <P>Due on Monday, january, 11</P>
-              </StyledDetail>
-              <StyledDetail>
-                <StyledIcon
-                  color="#fafafa"
-                  alt="calendar icon"
-                  src={priorityIcon}
-                />
-                <P>This task has a high priority</P>
-              </StyledDetail>
-            </StyledContent>
-            <StyledFooter>
-              <Button
-                text="Mark as completed"
-                onClick={() => null}
-                btnType="normal"
-                size={100}
-                color="#212121"
-              />
-            </StyledFooter>
-          </StyledModal>
-        </StyledContainer>
-      )}
+              <P>This task has a {toPriority(task.priority)} priority</P>
+            </StyledDetail>
+          </StyledContent>
+          <StyledFooter>
+            <Button
+              text={statusText}
+              onClick={onUpdateStatus}
+              btnType="normal"
+              size={100}
+              color="#212121"
+            />
+          </StyledFooter>
+        </StyledModal>
+      </StyledContainer>
     </>
   );
 };

@@ -18,7 +18,11 @@ export type TaskAction =
   | { type: "FETCH_TASKS_ERROR"; error: string }
   | { type: "ADD_TASK"; payload: { task: ITask } }
   | { type: "UPDATE_TASK"; payload: { task: ITask } }
-  | { type: "DELETE_TASK"; payload: { id: string } };
+  | { type: "DELETE_TASK"; payload: { id: string } }
+  | {
+      type: "UPDATE_TASK_STATUS";
+      payload: { id: string; status: "inprogress" | "completed" };
+    };
 
 export function TaskReducer(
   state: TaskState = InitialTaskState,
@@ -61,6 +65,15 @@ export function TaskReducer(
         ...state,
         taskList: state.taskList.map((task) =>
           task.id === action.payload.task.id ? action.payload.task : task
+        ),
+      };
+    case "UPDATE_TASK_STATUS":
+      return {
+        ...state,
+        taskList: state.taskList.map((task) =>
+          task.id === action.payload.id
+            ? { ...task, status: action.payload.status }
+            : task
         ),
       };
     default:

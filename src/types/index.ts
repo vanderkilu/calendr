@@ -8,6 +8,7 @@ export interface ITask {
 }
 
 export type TaskCreate = Omit<ITask, "id" | "dueDate">;
+export type TaskEdit = Omit<ITask, "id">;
 
 export interface ICell {
   day: number;

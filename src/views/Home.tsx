@@ -9,7 +9,8 @@ import { CalendarHeaderMonth } from "../components/CalendarHeader";
 import TaskModal from "../components/TaskModal";
 import TaskForm from "../components/TaskCreateForm";
 import TaskPreview from "../components/TaskPreviewForm";
-import { ITask, TaskCreate } from "../types";
+import { ITask } from "../types";
+import TaskEditForm from "../components/TaskEditForm";
 
 const CellContainer = styled.div`
   display: grid;
@@ -33,23 +34,57 @@ const Home = () => {
   const { state, dispatch } = useTasks();
   const { daysWithTasks, todayDate } = useCalendar(date, state.taskList);
   const [selectedDate, setSelectedDate] = useState("");
+  const [selectedTask, setSelectedTask] = useState<ITask>(null);
 
   const [isTaskCreateVisible, setIsTaskCreateVisible] = useState(false);
   const [isTaskPreviewVisible, setIsTaskPreviewVisible] = useState(false);
   const [isOverflowVisible, setIsOverflowVisible] = useState(false);
+  const [isTaskEditVisible, setIsTaskEditVisible] = useState(false);
 
   const handleOnCellClick = (passed: boolean, dateStr: string) => {
     if (passed) return;
     setSelectedDate(dateStr);
     setIsTaskCreateVisible(true);
   };
-  const handleOnCellTaskClick = () => {};
+
+  const handleOnCellTaskClick = (id: string) => {
+    const task = state.taskList.find((task) => task.id === id);
+    setSelectedTask(task);
+    setIsTaskPreviewVisible(true);
+  };
+
   const handleOnOverFlowClick = () => {};
 
-  const handleOnTaskSave = (task: ITask) => {
-    dispatch({ type: "ADD_TASK", payload: { task } });
-    setIsTaskCreateVisible(false);
+  const handleOnTaskSave = (task: ITask, type: "SAVE" | "EDIT") => {
+    if (type === "SAVE") {
+      dispatch({ type: "ADD_TASK", payload: { task } });
+      setIsTaskCreateVisible(false);
+    } else {
+      dispatch({ type: "UPDATE_TASK", payload: { task } });
+      setIsTaskEditVisible(false);
+    }
   };
+
+  const handleOnTaskDelete = () => {
+    dispatch({ type: "DELETE_TASK", payload: { id: selectedTask.id } });
+    setIsTaskPreviewVisible(false);
+  };
+
+  const handleOnTaskEdit = () => {
+    setIsTaskPreviewVisible(false);
+    setIsTaskEditVisible(true);
+  };
+
+  const handleOnStatusUpdate = () => {
+    const status =
+      selectedTask.status === "completed" ? "inprogress" : "completed";
+    dispatch({
+      type: "UPDATE_TASK",
+      payload: { task: { ...selectedTask, status } },
+    });
+    setIsTaskPreviewVisible(false);
+  };
+
   return (
     <>
       <CalendarHeaderMonth />
@@ -81,11 +116,24 @@ const Home = () => {
         width={50}
         onSave={handleOnTaskSave}
       />
-      <TaskPreview
-        isOpen={isTaskPreviewVisible}
-        onClose={() => setIsTaskPreviewVisible(false)}
-        width={30}
-      />
+      {isTaskEditVisible && (
+        <TaskEditForm
+          task={selectedTask}
+          onClose={() => setIsTaskEditVisible(false)}
+          width={50}
+          onSave={handleOnTaskSave}
+        />
+      )}
+      {isTaskPreviewVisible && (
+        <TaskPreview
+          task={selectedTask}
+          onDelete={handleOnTaskDelete}
+          onEdit={handleOnTaskEdit}
+          onUpdateStatus={handleOnStatusUpdate}
+          onClose={() => setIsTaskPreviewVisible(false)}
+          width={30}
+        />
+      )}
     </>
   );
 };

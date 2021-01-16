@@ -7,7 +7,7 @@ export interface ITask {
   priority: 1 | 2 | 3;
 }
 
-export type TaskCreate = Omit<ITask, "id">;
+export type TaskCreate = Omit<ITask, "id" | "dueDate">;
 
 export interface ICell {
   day: number;

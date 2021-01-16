@@ -46,8 +46,7 @@ const Home = () => {
   const handleOnCellTaskClick = () => {};
   const handleOnOverFlowClick = () => {};
 
-  const handleOnTaskSave = (payload: TaskCreate) => {
-    const task: ITask = { ...payload, id: ID() };
+  const handleOnTaskSave = (task: ITask) => {
     dispatch({ type: "ADD_TASK", payload: { task } });
     setIsTaskCreateVisible(false);
   };

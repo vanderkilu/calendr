@@ -15,7 +15,7 @@ export default function (date: moment.Moment, tasks: ITask[]) {
   const dayStart = firstDayOfMonth();
   const days = [...Array<number>(dayStart).fill(0), ...daysInMonth()];
   const dayDate = (day: number) => {
-    return moment(date).set("date", day).toString();
+    return moment(date).set("date", day).format("YYYY-MM-DD");
   };
 
   const getDaysWithTasks = (days: number[]) =>

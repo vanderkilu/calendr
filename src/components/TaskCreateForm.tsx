@@ -6,6 +6,7 @@ import Button from "./Button";
 import moment from "moment";
 
 import closeIcon from "../assets/close.svg";
+import { ID } from "../utils";
 
 const StyledContainer = styled.div`
   position: fixed;
@@ -141,21 +142,36 @@ export const TaskForm: React.FC<FormProps> = ({
   isOpen,
   defaultDate,
 }) => {
-  const dateStr = moment(defaultDate).format("YYYY-MM-DD");
-  const [input, setInput] = useState<TaskCreate>({
+  const initialState = {
     name: "unnamed task",
     description: "",
-    dueDate: dateStr,
     status: "inprogress",
     priority: 1,
-  });
+  } as TaskCreate;
+
+  const [dateStr, setDateStr] = useState(defaultDate);
+  React.useEffect(() => {
+    setDateStr(defaultDate);
+  }, [defaultDate]);
+
+  const handleOnSave = () => {
+    const task = {
+      ...input,
+      dueDate: moment(dateStr).format("YYYY-MM-DD"),
+      id: ID(),
+    };
+    onSave(task);
+    setInput(initialState);
+  };
+
+  const [input, setInput] = useState<TaskCreate>(initialState);
+
   const handleInputChange = (event: ChangeEventType) => {
     event.persist();
     setInput((inputs) => ({
       ...inputs,
       [event.target.name]: event.target.value,
     }));
-    console.log("input", input);
   };
   return (
     <>
@@ -214,14 +230,14 @@ export const TaskForm: React.FC<FormProps> = ({
                   <StyledInput
                     name="dueDate"
                     type="date"
-                    value={input.dueDate}
-                    onChange={handleInputChange}
+                    value={dateStr}
+                    onChange={(e) => setDateStr(e.target.value)}
                   />
                 </StyledInputGroup>
               </StyledForm>
             </StyledContent>
             <StyledFooter>
-              <Button text="Save" onClick={() => onSave(input)} />
+              <Button text="Save" onClick={handleOnSave} />
             </StyledFooter>
           </StyledModal>
         </StyledContainer>

@@ -13,6 +13,11 @@ const StyledButton = styled.button<{
   font-size: 1.2rem;
   border: none;
   border-radius: 6px;
+  transition: all 0.3s;
+  opacity: 0.9;
+  &:hover {
+    opacity: 1;
+  }
   ${(props) =>
     props.btnType === "normal" &&
     css`

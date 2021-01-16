@@ -55,7 +55,7 @@ const TaskPreview: React.FC<TaskPreviewProps> = ({
   onEdit,
   onUpdateStatus,
 }) => {
-  const humanDate = moment(task.dueDate).format("DDDD MMMM, YYYY");
+  const humanDate = moment(task.dueDate).format("DD MMMM, YYYY");
   const hasDescription = task.description !== "";
   const statusText =
     task.status === "completed" ? "Mark as in progress" : "Mark as completed";

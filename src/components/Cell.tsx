@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { ICell } from "../types";
 import { ID } from "../utils";
 
@@ -23,8 +23,8 @@ const StyledCellText = styled.p`
 `;
 export const StyledCellTask = styled.div`
   padding: 0.4rem;
-  border-radius: 2px;
-  background-color: #e8f5e9;
+  border-radius: 3px;
+  background-color: #0b8043;
   margin-bottom: 0.2rem;
   display: flex;
   justify-content: flex-start;
@@ -32,11 +32,16 @@ export const StyledCellTask = styled.div`
   cursor: pointer;
   overflow: hidden;
 `;
-const StyledCellTaskText = styled.p`
+const StyledCellTaskText = styled.p<{ canStrike: boolean }>`
   font-size: 1rem;
-  color: #81c784;
+  color: #ffffff;
   padding: 0;
   margin: 0;
+  ${(props) =>
+    props.canStrike &&
+    css`
+      text-decoration: line-through;
+    `}
 `;
 const StyledManyTask = styled.div`
   color: "#b8bac3";
@@ -89,7 +94,11 @@ const Cell: React.FC<CellProps> = ({
             onClick={(e: ChangeEventType) => handleOnEventCellClick(e, task.id)}
             key={ID()}
           >
-            {task && <StyledCellTaskText>{task.name}</StyledCellTaskText>}
+            {task && (
+              <StyledCellTaskText canStrike={task.status === "completed"}>
+                {task.name}
+              </StyledCellTaskText>
+            )}
           </StyledCellTask>
         ))}
       {isManyTasks && (

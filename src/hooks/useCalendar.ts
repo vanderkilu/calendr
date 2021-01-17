@@ -1,13 +1,13 @@
 import moment from "moment";
 import { ITask } from "../types";
 
-export default function (date: moment.Moment, tasks: ITask[]) {
+const generateMonthDays = (date: moment.Moment) => {
   const firstDayOfMonth = (): number => {
     const day = moment(date).startOf("month").format("d");
     return parseInt(day);
   };
 
-  const daysInMonth = () => {
+  const daysInMonth = (): number[] => {
     const daysCount = moment(date).daysInMonth();
     return Array.from(Array(daysCount), (_, i) => i + 1);
   };
@@ -15,11 +15,16 @@ export default function (date: moment.Moment, tasks: ITask[]) {
   const dayStart = firstDayOfMonth();
   const days = [...Array<number>(dayStart).fill(0), ...daysInMonth()];
   const dayDate = (day: number) => {
-    return moment(date).set("date", day).format("YYYY-MM-DD");
+    return moment(date).set("date", day).toString();
   };
 
   const currentDay = parseInt(date.format("D"));
   const currentMonth = moment().format("MMM");
+  return { days, dayDate, currentDay, currentMonth };
+};
+
+export default function (date: moment.Moment, tasks: ITask[]) {
+  const { days, dayDate } = generateMonthDays(date);
 
   const getDaysWithTasks = (days: number[]) =>
     days.map((day) => {
@@ -53,9 +58,12 @@ export default function (date: moment.Moment, tasks: ITask[]) {
   const generateDates = () => {
     let oldDate = date;
     return Array.from(Array(11).keys()).map((index) => {
-      //set the date to reflect next month
+      //set the date to reflect next month and then
       // generate all days for the month
       const newDate = moment(oldDate).set("month", index);
+      const { days, dayDate, currentDay, currentMonth } = generateMonthDays(
+        newDate
+      );
       oldDate = newDate;
 
       return {

@@ -18,8 +18,9 @@ import {
 import Control from "../components/Control";
 import Button from "../components/Button";
 import Switch, { StyledGroupSwitch } from "../components/Switch";
+import YearView from "../components/YearView";
 
-const CellContainer = styled.div`
+const StyledCellContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
 `;
@@ -114,9 +115,9 @@ const Home = () => {
         </StyledControlGroup>
       </StyledControlWrapper>
 
-      {view === "month" ? <CalendarHeaderMonth /> : null}
+      {view === "month" && <CalendarHeaderMonth />}
       {view === "month" ? (
-        <CellContainer>
+        <StyledCellContainer>
           {daysWithTasks.map((task) => (
             <Cell
               task={task}
@@ -127,8 +128,14 @@ const Home = () => {
               onOverflowClick={handleOnOverFlowClick}
             />
           ))}
-        </CellContainer>
-      ) : null}
+        </StyledCellContainer>
+      ) : (
+        <YearView
+          date={date}
+          tasks={state.taskList}
+          onCellTaskClick={handleOnCellTaskClick}
+        />
+      )}
 
       <TaskModal
         isOpen={isOverflowVisible}

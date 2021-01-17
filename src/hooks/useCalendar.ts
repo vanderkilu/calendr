@@ -18,6 +18,9 @@ export default function (date: moment.Moment, tasks: ITask[]) {
     return moment(date).set("date", day).format("YYYY-MM-DD");
   };
 
+  const currentDay = parseInt(date.format("D"));
+  const currentMonth = moment().format("MMM");
+
   const getDaysWithTasks = (days: number[]) =>
     days.map((day) => {
       const dateStr = dayDate(day);
@@ -30,8 +33,43 @@ export default function (date: moment.Moment, tasks: ITask[]) {
       };
     });
 
+  const monthString = (index: number) => {
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "November",
+      "Decemeber",
+    ];
+    return months[index];
+  };
+
+  const generateDates = () => {
+    let oldDate = date;
+    return Array.from(Array(11).keys()).map((index) => {
+      //set the date to reflect next month
+      // generate all days for the month
+      const newDate = moment(oldDate).set("month", index);
+      oldDate = newDate;
+
+      return {
+        month: monthString(index),
+        days,
+        dayDate,
+        currentDay,
+        currentMonth,
+      };
+    });
+  };
+
   const daysWithTasks = getDaysWithTasks(days);
   const todayDate = parseInt(date.format("D"));
 
-  return { daysWithTasks, todayDate };
+  return { daysWithTasks, todayDate, generateDates };
 }

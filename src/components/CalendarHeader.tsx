@@ -11,7 +11,7 @@ const Header = styled.div<{
   grid-template-columns: repeat(7, 1fr);
   background-color: #f3f4f9;
   justify-items: center;
-  margin-top: 5rem;
+  margin-top: 2rem;
   padding: ${(props) => props.padding || "2rem"};
   ${(props) =>
     props.align &&

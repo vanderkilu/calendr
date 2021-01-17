@@ -32,7 +32,7 @@ export const StyledCellTask = styled.div`
   cursor: pointer;
   overflow: hidden;
 `;
-const StyledCellTaskText = styled.p<{ canStrike: boolean }>`
+export const StyledCellTaskText = styled.p<{ canStrike: boolean }>`
   font-size: 1rem;
   color: #ffffff;
   padding: 0;
@@ -43,11 +43,13 @@ const StyledCellTaskText = styled.p<{ canStrike: boolean }>`
       text-decoration: line-through;
     `}
 `;
-const StyledManyTask = styled.div`
-  color: "#b8bac3";
+const StyledManyTask = styled.p`
+  color: #0b8043;
+  padding: 0.2rem;
   font-size: 1.1rem;
-  width: 100%;
+  width: 80%;
   margin-top: 1rem;
+  background-color: #c8e6c9;
   cursor: pointer;
 `;
 
@@ -105,7 +107,7 @@ const Cell: React.FC<CellProps> = ({
         <StyledManyTask
           onClick={(e: ChangeEventType) => onOverflowClick(e, dateStr)}
         >
-          +{overDue}
+          +{overDue} more
         </StyledManyTask>
       )}
     </StyledCell>

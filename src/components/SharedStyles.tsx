@@ -129,3 +129,16 @@ export const StyledOption = styled.option`
   font: inherit;
   font-size: 1.4rem;
 `;
+
+export const StyledControlWrapper = styled.div`
+  display: flex;
+  padding: 0 10rem;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const StyledControlGroup = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+`;

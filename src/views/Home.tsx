@@ -3,31 +3,28 @@ import moment from "moment";
 import styled from "styled-components";
 import { useTasks } from "../contexts/task.context";
 import useCalendar from "../hooks/useCalendar";
-import Cell from "../components/Cell";
+import Cell, { StyledCellTask, StyledCellTaskText } from "../components/Cell";
 import { ID } from "../utils";
 import { CalendarHeaderMonth } from "../components/CalendarHeader";
-import TaskModal from "../components/TaskModal";
+import TaskModal from "../components/TaskOverFlowModal";
 import TaskForm from "../components/TaskCreateForm";
 import TaskPreview from "../components/TaskPreviewForm";
 import { ITask } from "../types";
 import TaskEditForm from "../components/TaskEditForm";
+import {
+  StyledControlWrapper,
+  StyledControlGroup,
+} from "../components/SharedStyles";
+import Control from "../components/Control";
+import Button from "../components/Button";
+import Switch, { StyledGroupSwitch } from "../components/Switch";
 
 const CellContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
 `;
 
-export const CellTask = styled.div`
-  padding: 0.4rem;
-  border-radius: 2px;
-  background-color: #e8f5e9;
-  margin-bottom: 0.2rem;
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  cursor: pointer;
-  overflow: hidden;
-`;
+type ChangeEventType = React.MouseEvent<HTMLDivElement, MouseEvent>;
 
 const Home = () => {
   const [date, setDate] = useState(moment());
@@ -35,11 +32,20 @@ const Home = () => {
   const { daysWithTasks, todayDate } = useCalendar(date, state.taskList);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTask, setSelectedTask] = useState<ITask>(null);
+  const [view, setView] = useState<"month" | "year">("month");
 
   const [isTaskCreateVisible, setIsTaskCreateVisible] = useState(false);
   const [isTaskPreviewVisible, setIsTaskPreviewVisible] = useState(false);
   const [isOverflowVisible, setIsOverflowVisible] = useState(false);
   const [isTaskEditVisible, setIsTaskEditVisible] = useState(false);
+
+  const taskForSelectedDate = state.taskList.filter(
+    (task) => task.dueDate === selectedDate
+  );
+
+  const updateDate = (type: moment.unitOfTime.All, index: number) => {
+    setDate(moment(date).set(type, index));
+  };
 
   const handleOnCellClick = (passed: boolean, dateStr: string) => {
     if (passed) return;
@@ -53,7 +59,16 @@ const Home = () => {
     setIsTaskPreviewVisible(true);
   };
 
-  const handleOnOverFlowClick = () => {};
+  const handleOnOverFlowClick = (e: ChangeEventType, dateStr: string) => {
+    e.stopPropagation();
+    setSelectedDate(dateStr);
+    setIsOverflowVisible(true);
+  };
+
+  const handleOnOverFlowTaskClick = (id: string) => {
+    handleOnCellTaskClick(id);
+    setIsOverflowVisible(false);
+  };
 
   const handleOnTaskSave = (task: ITask, type: "SAVE" | "EDIT") => {
     if (type === "SAVE") {
@@ -87,26 +102,48 @@ const Home = () => {
 
   return (
     <>
-      <CalendarHeaderMonth />
-      <CellContainer>
-        {daysWithTasks.map((task) => (
-          <Cell
-            task={task}
-            today={todayDate}
-            onClick={handleOnCellClick}
-            key={ID()}
-            onCellTaskClick={handleOnCellTaskClick}
-            onOverflowClick={handleOnOverFlowClick}
-          />
-        ))}
-      </CellContainer>
+      <StyledControlWrapper>
+        <Button onClick={() => null} text="Add new task" size={150} />
+        <StyledGroupSwitch>
+          <Switch id="month" onClick={() => setView("month")} />
+          <Switch id="year" onClick={() => setView("year")} />
+        </StyledGroupSwitch>
+        <StyledControlGroup>
+          <Control date={date} type="month" setDate={updateDate} key={ID()} />
+          <Control date={date} type="year" setDate={updateDate} key={ID()} />
+        </StyledControlGroup>
+      </StyledControlWrapper>
+
+      {view === "month" ? <CalendarHeaderMonth /> : null}
+      {view === "month" ? (
+        <CellContainer>
+          {daysWithTasks.map((task) => (
+            <Cell
+              task={task}
+              today={todayDate}
+              onClick={handleOnCellClick}
+              key={ID()}
+              onCellTaskClick={handleOnCellTaskClick}
+              onOverflowClick={handleOnOverFlowClick}
+            />
+          ))}
+        </CellContainer>
+      ) : null}
+
       <TaskModal
         isOpen={isOverflowVisible}
         onClose={() => setIsOverflowVisible(false)}
         width={25}
       >
-        {[1, 2, 3, 4, 5].map((i) => (
-          <CellTask>{i}</CellTask>
+        {taskForSelectedDate.map((task) => (
+          <StyledCellTask
+            onClick={() => handleOnOverFlowTaskClick(task.id)}
+            key={task.id}
+          >
+            <StyledCellTaskText canStrike={task.status === "completed"}>
+              {task.name}
+            </StyledCellTaskText>
+          </StyledCellTask>
         ))}
       </TaskModal>
       <TaskForm

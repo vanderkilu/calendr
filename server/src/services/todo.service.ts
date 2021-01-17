@@ -2,8 +2,8 @@ import HttpException from "../exceptions/HttpException";
 import todoModel from "../models/todo.model";
 import { isEmptyObject } from "../utils/util";
 import { TodoDTO } from "../dtos/todo.dto";
-import { Todo } from "interfaces/todo.interface";
-import { ITodoService } from "interfaces/todo.service.interface";
+import { Todo } from "../interfaces/todo.interface";
+import { ITodoService } from "../interfaces/todo.service.interface";
 
 class TodoService implements ITodoService {
   public todos = todoModel;
@@ -16,7 +16,7 @@ class TodoService implements ITodoService {
   public async getTodoById(todoId: string): Promise<Todo> {
     const todo = await this.todos.findById(todoId);
     if (!todo) {
-      throw new HttpException(409, `Todo with ${todoId} not found`);
+      throw new HttpException(404, `Todo with ${todoId} not found`);
     }
     return todo;
   }
@@ -44,7 +44,7 @@ class TodoService implements ITodoService {
   public async deleteTodo(todoId: string): Promise<Todo> {
     const todo = await this.todos.findById(todoId);
     if (!todo) {
-      throw new HttpException(409, `Todo with ${todoId} not found`);
+      throw new HttpException(404, `Todo with ${todoId} not found`);
     }
     const deletedTodo = await todo.remove();
     return deletedTodo;

@@ -1,4 +1,4 @@
-import { TodoDTO } from "dtos/todo.dto";
+import { TodoDTO } from "../dtos/todo.dto";
 import { Todo } from "./todo.interface";
 
 export interface ITodoService {

@@ -1,5 +1,5 @@
 import "dotenv/config";
-import TodoRoute from "routes/todo.route";
+import TodoRoute from "./routes/todo.route";
 import App from "./app";
 import validateEnv from "./utils/validateEnv";
 

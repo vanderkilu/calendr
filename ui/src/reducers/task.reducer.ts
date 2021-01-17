@@ -13,9 +13,7 @@ export const InitialTaskState = {
 };
 
 export type TaskAction =
-  | { type: "FETCH_TASKS_BEGIN" }
-  | { type: "FETCH_TASKS_SUCCESS"; payload: { tasks: ITask[] } }
-  | { type: "FETCH_TASKS_ERROR"; error: string }
+  | { type: "ADD_TASKS"; payload: { tasks: ITask[] } }
   | { type: "ADD_TASK"; payload: { task: ITask } }
   | { type: "UPDATE_TASK"; payload: { task: ITask } }
   | { type: "DELETE_TASK"; payload: { id: string } }
@@ -29,24 +27,12 @@ export function TaskReducer(
   action: TaskAction
 ): TaskState {
   switch (action.type) {
-    case "FETCH_TASKS_BEGIN":
-      return {
-        ...state,
-        error: null,
-        isLoading: true,
-      };
-    case "FETCH_TASKS_SUCCESS":
+    case "ADD_TASKS":
       return {
         ...state,
         error: null,
         isLoading: false,
         taskList: action.payload.tasks,
-      };
-    case "FETCH_TASKS_ERROR":
-      return {
-        ...state,
-        isLoading: false,
-        error: action.error,
       };
     case "ADD_TASK":
       return {

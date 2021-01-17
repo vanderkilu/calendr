@@ -5,10 +5,11 @@ export interface ITask {
   dueDate: string;
   status: "inprogress" | "completed";
   priority: 1 | 2 | 3;
+  createdAt?: string;
 }
 
 export type TaskCreate = Omit<ITask, "id" | "dueDate">;
-export type TaskEdit = Omit<ITask, "id">;
+export type Todo = Omit<ITask, "id">;
 
 export interface ICell {
   day: number;

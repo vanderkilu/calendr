@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 
-import { ITask, TaskEdit, TaskCreate } from "../types";
+import { ITask, Todo } from "../types";
 import Button from "./Button";
 import moment from "moment";
 
 import closeIcon from "../assets/close.svg";
-import { ID } from "../utils";
 
 import {
   StyledContainer,
@@ -22,6 +21,7 @@ import {
   StyledOption,
   StyledFooter,
 } from "./SharedStyles";
+import { updateTodo } from "../api/todo.api";
 
 type ChangeEventType =
   | React.ChangeEvent<HTMLInputElement>
@@ -41,24 +41,32 @@ export const TaskEditForm: React.FC<FormProps> = ({
   onClose,
   task,
 }) => {
-  const handleOnSave = () => {
-    const updatedTask = {
-      ...input,
-      dueDate: moment(input.dueDate).format("YYYY-MM-DD"),
-      id: task.id,
-    };
-    onSave(updatedTask, "EDIT");
-  };
-
   const initialState = {
     name: task.name,
     description: task.description,
     dueDate: task.dueDate,
     status: task.status,
     priority: task.priority,
-  } as TaskEdit;
+  } as Todo;
 
-  const [input, setInput] = useState<TaskEdit>(initialState);
+  const [input, setInput] = useState<Todo>(initialState);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleOnSave = async () => {
+    setIsLoading(true);
+    try {
+      const updatedTask = {
+        ...input,
+        dueDate: moment(input.dueDate).format("YYYY-MM-DD"),
+        id: task.id,
+      };
+      await updateTodo(task.id, updatedTask);
+      setIsLoading(false);
+      onSave(updatedTask, "EDIT");
+    } catch (err) {
+      setIsLoading(false);
+    }
+  };
 
   const handleInputChange = (event: ChangeEventType) => {
     event.persist();
@@ -136,7 +144,7 @@ export const TaskEditForm: React.FC<FormProps> = ({
             </StyledForm>
           </StyledContent>
           <StyledFooter>
-            <Button text="Save" onClick={handleOnSave} />
+            <Button text="Save" onClick={handleOnSave} isLoading={isLoading} />
           </StyledFooter>
         </StyledModal>
       </StyledContainer>

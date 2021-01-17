@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import moment from "moment";
 import styled from "styled-components";
 import { useTasks } from "../contexts/task.context";
@@ -19,6 +19,7 @@ import Control from "../components/Control";
 import Button from "../components/Button";
 import Switch, { StyledGroupSwitch } from "../components/Switch";
 import YearView from "../components/YearView";
+import { fetchTodos } from "../api/todo.api";
 
 const StyledCellContainer = styled.div`
   display: grid;
@@ -39,6 +40,14 @@ const Home = () => {
   const [isTaskPreviewVisible, setIsTaskPreviewVisible] = useState(false);
   const [isOverflowVisible, setIsOverflowVisible] = useState(false);
   const [isTaskEditVisible, setIsTaskEditVisible] = useState(false);
+
+  useEffect(() => {
+    const getTodos = async () => {
+      const tasks = await fetchTodos();
+      dispatch({ type: "ADD_TASKS", payload: { tasks } });
+    };
+    getTodos();
+  }, []);
 
   const taskForSelectedDate = state.taskList.filter(
     (task) => task.dueDate === selectedDate

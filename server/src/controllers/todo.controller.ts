@@ -1,6 +1,7 @@
 import { TodoDTO } from "../dtos/todo.dto";
 import { NextFunction, Request, Response } from "express";
 import { ITodoService } from "../interfaces/todo.service.interface";
+import { transformTodo, transformTodoList } from "../transform/todo.transform";
 
 class TodoController {
   private todoService: ITodoService;
@@ -12,7 +13,7 @@ class TodoController {
   getAllTodos = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const todos = await this.todoService.getAllTodos();
-      res.status(200).json(todos);
+      res.status(200).json(transformTodoList(todos));
     } catch (err) {
       next(err);
     }
@@ -22,7 +23,7 @@ class TodoController {
     const todoId = req.params.id;
     try {
       const todo = await this.todoService.getTodoById(todoId);
-      res.status(200).json(todo);
+      res.status(200).json(transformTodo(todo));
     } catch (err) {
       next(err);
     }
@@ -32,7 +33,7 @@ class TodoController {
     const todoData: TodoDTO = req.body;
     try {
       const todo = await this.todoService.createTodo(todoData);
-      res.status(201).json(todo);
+      res.status(201).json(transformTodo(todo));
     } catch (err) {
       next(err);
     }

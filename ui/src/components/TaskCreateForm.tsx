@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { ITask, TaskCreate } from "../types";
 import Button from "./Button";
 import moment from "moment";
+import { createTodo } from "../api/todo.api";
 
 import closeIcon from "../assets/close.svg";
 import { ID } from "../utils";
@@ -51,21 +52,28 @@ export const TaskForm: React.FC<FormProps> = ({
   } as TaskCreate;
 
   const [dateStr, setDateStr] = useState(defaultDate);
+  const [isLoading, setIsLoading] = useState(false);
+  const [input, setInput] = useState<TaskCreate>(initialState);
+
   React.useEffect(() => {
     setDateStr(defaultDate);
   }, [defaultDate]);
 
-  const handleOnSave = () => {
-    const task = {
-      ...input,
-      dueDate: moment(dateStr).format("YYYY-MM-DD"),
-      id: ID(),
-    };
-    onSave(task, "SAVE");
-    setInput(initialState);
+  const handleOnSave = async () => {
+    setIsLoading(true);
+    try {
+      const todo = {
+        ...input,
+        dueDate: moment(dateStr).format("YYYY-MM-DD"),
+      };
+      const task = await createTodo(todo);
+      setIsLoading(false);
+      onSave(task, "SAVE");
+      setInput(initialState);
+    } catch (err) {
+      setIsLoading(false);
+    }
   };
-
-  const [input, setInput] = useState<TaskCreate>(initialState);
 
   const handleInputChange = (event: ChangeEventType) => {
     event.persist();
@@ -143,7 +151,11 @@ export const TaskForm: React.FC<FormProps> = ({
               </StyledForm>
             </StyledContent>
             <StyledFooter>
-              <Button text="Save" onClick={handleOnSave} />
+              <Button
+                text="Save"
+                onClick={handleOnSave}
+                isLoading={isLoading}
+              />
             </StyledFooter>
           </StyledModal>
         </StyledContainer>

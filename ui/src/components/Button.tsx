@@ -1,13 +1,15 @@
 import React from "react";
-import styled, { css } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 
 const StyledButton = styled.button<{
   color: string | undefined;
   size: number | undefined;
   btnType?: string;
 }>`
+  position: relative;
   padding: 0.8rem 1.5rem;
-  width: ${(props) => props.size || "6rem"};
+  width: ${(props) => props.size || "8rem"};
+  height: ${(props) => props.size / 2 || "4rem"};
   background: linear-gradient(to right, #fd9da1, #fcd0dd);
   color: ${(props) => props.color || "#ffffffff"};
   font-size: 1.2rem;
@@ -32,6 +34,23 @@ const StyledButton = styled.button<{
     `}
 `;
 
+const spin = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+const StyledLoader = styled.div`
+  position: absolute;
+  left: 40%;
+  top: 40%;
+  transform: translate(-40%, -40%);
+  border: 1.5px solid #ffffff; /* Light grey */
+  border-top: 1.5px solid #fd9da1; /* Blue */
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  animation: ${spin} 0.5s linear infinite;
+`;
+
 interface ButtonProps {
   text: string;
   color?: string | undefined;
@@ -39,6 +58,7 @@ interface ButtonProps {
   onClick: () => void;
   btnType?: string;
   isDisabled?: boolean;
+  isLoading?: boolean;
   type?: "button" | "submit" | "reset" | undefined;
 }
 
@@ -47,6 +67,7 @@ const Button: React.FC<ButtonProps> = ({
   color,
   size,
   onClick,
+  isLoading,
   btnType,
   type,
   isDisabled = false,
@@ -58,10 +79,10 @@ const Button: React.FC<ButtonProps> = ({
         size={size}
         onClick={onClick}
         btnType={btnType}
-        disabled={isDisabled}
+        disabled={isLoading ? true : isDisabled}
         type={type}
       >
-        {text}
+        {!isLoading ? text : <StyledLoader />}
       </StyledButton>
     </>
   );

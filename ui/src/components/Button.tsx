@@ -8,8 +8,8 @@ const StyledButton = styled.button<{
 }>`
   position: relative;
   padding: 0.8rem 1.5rem;
-  width: ${(props) => props.size || "8rem"};
-  height: ${(props) => props.size / 2 || "4rem"};
+  width: ${(props) => props.size + "px" || "8rem"};
+  height: ${(props) => props.size / 4 + "px" || "4rem"};
   background: linear-gradient(to right, #fd9da1, #fcd0dd);
   color: ${(props) => props.color || "#ffffffff"};
   font-size: 1.2rem;

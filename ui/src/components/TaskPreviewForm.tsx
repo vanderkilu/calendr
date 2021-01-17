@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import moment from "moment";
 
@@ -19,6 +19,7 @@ import calendarIcon from "../assets/calendar.svg";
 import priorityIcon from "../assets/priority.svg";
 import listIcon from "../assets/list.svg";
 import { ITask } from "../types";
+import { deleteTodo, updateTodo } from "../api/todo.api";
 
 const H3 = styled.h3`
   font-size: 1.8rem;
@@ -44,7 +45,7 @@ interface TaskPreviewProps {
   task: ITask;
   onDelete: () => void;
   onEdit: () => void;
-  onUpdateStatus: () => void;
+  onUpdateStatus: (task: ITask, type: "SAVE" | "EDIT") => void;
 }
 
 const TaskPreview: React.FC<TaskPreviewProps> = ({
@@ -55,6 +56,8 @@ const TaskPreview: React.FC<TaskPreviewProps> = ({
   onEdit,
   onUpdateStatus,
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const humanDate = moment(task.dueDate).format("DD MMMM, YYYY");
   const hasDescription = task.description !== "";
   const statusText =
@@ -67,6 +70,30 @@ const TaskPreview: React.FC<TaskPreviewProps> = ({
     };
     return map[priority];
   };
+
+  const handleOnDelete = async () => {
+    setIsLoading(true);
+    try {
+      await deleteTodo(task.id);
+      onDelete();
+      setIsLoading(false);
+    } catch (err) {
+      setIsLoading(false);
+    }
+  };
+
+  const handleStatusUpdate = async () => {
+    setIsLoading(true);
+    try {
+      const status = task.status === "completed" ? "inprogress" : "completed";
+      const todo = { ...task, status } as ITask;
+      await updateTodo(task.id, todo);
+      setIsLoading(false);
+      onUpdateStatus(todo, "EDIT");
+    } catch (err) {
+      setIsLoading(false);
+    }
+  };
   return (
     <>
       <StyledContainer>
@@ -76,7 +103,7 @@ const TaskPreview: React.FC<TaskPreviewProps> = ({
               isAction
               alt="delete icon"
               src={deleteIcon}
-              onClick={onDelete}
+              onClick={handleOnDelete}
               color="#fafafa"
             />
             <StyledIcon
@@ -122,10 +149,11 @@ const TaskPreview: React.FC<TaskPreviewProps> = ({
           <StyledFooter>
             <Button
               text={statusText}
-              onClick={onUpdateStatus}
+              onClick={handleStatusUpdate}
               btnType="normal"
-              size={100}
+              size={150}
               color="#212121"
+              isLoading={isLoading}
             />
           </StyledFooter>
         </StyledModal>

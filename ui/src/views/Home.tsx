@@ -105,13 +105,8 @@ const Home = () => {
     setIsTaskEditVisible(true);
   };
 
-  const handleOnStatusUpdate = () => {
-    const status =
-      selectedTask.status === "completed" ? "inprogress" : "completed";
-    dispatch({
-      type: "UPDATE_TASK",
-      payload: { task: { ...selectedTask, status } },
-    });
+  const handleOnStatusUpdate = (task: ITask, type: "SAVE" | "EDIT") => {
+    handleOnTaskSave(task, type);
     setIsTaskPreviewVisible(false);
   };
 

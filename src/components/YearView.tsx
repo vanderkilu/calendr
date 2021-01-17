@@ -11,7 +11,7 @@ const StyledMonthContainer = styled.div`
 `;
 const StyledMonthHeader = styled.h3`
   font-size: 1.5rem;
-  color: #c8e6c9;
+  color: #0b8043;
   text-align: center;
 `;
 const StyledDayContainer = styled.div`

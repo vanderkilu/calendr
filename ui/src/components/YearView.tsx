@@ -111,7 +111,7 @@ const YearView: React.FC<YearProps> = ({ date, tasks, onCellTaskClick }) => {
   const tasksForDate = tasks.filter((task) => task.dueDate === selectedDate);
   const formattedDate = moment(selectedDate).format("DD/MMM/YYYY");
   const handleOnClick = (date: string) => {
-    setSelectedDate(date);
+    setSelectedDate(moment(date).format("YYYY-MM-DD"));
   };
 
   return (

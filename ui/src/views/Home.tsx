@@ -81,6 +81,11 @@ const Home = () => {
     }
   };
 
+  const handleNewTaskCreate = () => {
+    setSelectedDate(moment().format("YYYY-MM-DD"));
+    setIsTaskCreateVisible(true);
+  };
+
   const handleOnTaskDelete = () => {
     dispatch({ type: "DELETE_TASK", payload: { id: selectedTask.id } });
     setIsTaskPreviewVisible(false);
@@ -104,7 +109,7 @@ const Home = () => {
   return (
     <>
       <StyledControlWrapper>
-        <Button onClick={() => null} text="Add new task" size={150} />
+        <Button onClick={handleNewTaskCreate} text="Add new task" size={150} />
         <StyledGroupSwitch>
           <Switch id="month" onClick={() => setView("month")} />
           <Switch id="year" onClick={() => setView("year")} />

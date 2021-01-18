@@ -17,7 +17,3 @@ export interface ICell {
   dateStr: string;
   tasks: ITask[];
 }
-
-declare module "*.jpg";
-declare module "*.jpeg";
-declare module "*.svg";

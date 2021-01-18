@@ -70,9 +70,11 @@ export const TaskEditForm: React.FC<FormProps> = ({
 
   const handleInputChange = (event: ChangeEventType) => {
     event.persist();
+    const { name, value } = event.target;
+    const isPriority = name === "priority";
     setInput((inputs) => ({
       ...inputs,
-      [event.target.name]: event.target.value,
+      [name]: isPriority ? parseInt(value) : value,
     }));
   };
 

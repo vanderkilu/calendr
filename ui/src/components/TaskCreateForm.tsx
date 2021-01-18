@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { ITask, TaskCreate } from "../types";
+import { ITask, TaskCreate, Todo } from "../types";
 import Button from "./Button";
 import moment from "moment";
 import { createTodo } from "../api/todo.api";
@@ -76,9 +76,11 @@ export const TaskForm: React.FC<FormProps> = ({
 
   const handleInputChange = (event: ChangeEventType) => {
     event.persist();
+    const { name, value } = event.target;
+    const isPriority = name === "priority";
     setInput((inputs) => ({
       ...inputs,
-      [event.target.name]: event.target.value,
+      [name]: isPriority ? parseInt(value) : value,
     }));
   };
   return (
@@ -133,9 +135,9 @@ export const TaskForm: React.FC<FormProps> = ({
                     value={input.priority}
                     onChange={handleInputChange}
                   >
-                    <StyledOption value="1">High</StyledOption>
-                    <StyledOption value="2">Medium</StyledOption>
-                    <StyledOption value="3">Low</StyledOption>
+                    <StyledOption value={1}>High</StyledOption>
+                    <StyledOption value={2}>Medium</StyledOption>
+                    <StyledOption value={3}>Low</StyledOption>
                   </StyledSelect>
                 </StyledInputGroup>
                 <StyledInputGroup>

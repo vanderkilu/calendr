@@ -74,9 +74,18 @@ class App {
     mongoose.set("debug", true);
   }
   private remoteConnection() {
-    mongoose.connect(process.env.MONGODB_URI, () =>
-      console.log("connect to remote successfully")
-    );
+    mongoose
+      .connect(process.env.MONGODB_URI, {
+        useNewUrlParser: true,
+        useCreateIndex: true,
+        useUnifiedTopology: true,
+      })
+      .then(() => {
+        console.log("Connected to remote successfully database ");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
   private connectToDatabase() {
     this.env ? this.remoteConnection() : this.localConnection();

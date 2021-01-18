@@ -1,6 +1,6 @@
 # Todo-Calendar-View
 
-This is a todo app but with the tasks arranged on a calendar view, similar to the way tasks on google calendar are displayed. It is a technical take home assignment.
+This is a todo app built with the tasks arranged on a calendar view, similar to the way tasks on google calendar are displayed. It is a technical take home assignment.
 Live url for the app is [here](https://todo-calendar-view.netlify.app/)
 
 ## Technologies Used

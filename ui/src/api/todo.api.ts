@@ -1,6 +1,9 @@
 import { ITask, Todo } from "../types";
 
-const baseUrl = "http://localhost:8080/v1/api/todos/";
+const baseUrl =
+  process.env.NODE_ENV === "production"
+    ? "https://task-calendar.herokuapp.com/v1/api/todos/"
+    : "http://localhost:8080/v1/api/todos/";
 
 async function get<T>(url: string): Promise<T> {
   const response = await fetch(url);

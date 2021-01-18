@@ -144,7 +144,12 @@ export const TaskEditForm: React.FC<FormProps> = ({
             </StyledForm>
           </StyledContent>
           <StyledFooter>
-            <Button text="Save" onClick={handleOnSave} isLoading={isLoading} />
+            <Button
+              text="Save"
+              size={120}
+              onClick={handleOnSave}
+              isLoading={isLoading}
+            />
           </StyledFooter>
         </StyledModal>
       </StyledContainer>

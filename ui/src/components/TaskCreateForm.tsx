@@ -151,6 +151,7 @@ export const TaskForm: React.FC<FormProps> = ({
             </StyledContent>
             <StyledFooter>
               <Button
+                size={120}
                 text="Save"
                 onClick={handleOnSave}
                 isLoading={isLoading}

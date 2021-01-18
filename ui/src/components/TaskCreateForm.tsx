@@ -6,7 +6,6 @@ import moment from "moment";
 import { createTodo } from "../api/todo.api";
 
 import closeIcon from "../assets/close.svg";
-import { ID } from "../utils";
 
 import {
   StyledContainer,

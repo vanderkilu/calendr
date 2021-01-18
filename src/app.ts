@@ -79,7 +79,7 @@ class App {
     );
   }
   private connectToDatabase() {
-    this.localConnection();
+    this.env ? this.remoteConnection : this.localConnection();
   }
 }
 

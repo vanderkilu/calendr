@@ -1,6 +1,6 @@
-# CalendarTask
+# calendr
 
-This is a todo app built with the tasks arranged on a calendar view, similar to the way tasks on google calendar are displayed.
+This is a simple/POC calendar app with tasks/events similar to the way tasks are rendered on google calendar.
 Live url for the app is [here](https://todo-calendar-view.netlify.app/)
 
 ## Technologies Used
